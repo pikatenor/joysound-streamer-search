@@ -1,64 +1,132 @@
+import { useState, useEffect, useCallback } from "react"
 import {
   Box,
   Button,
-  Checkbox,
   ClientOnly,
-  HStack,
-  Heading,
-  Progress,
-  RadioGroup,
   Skeleton,
   VStack,
+  Table,
+  HStack,
+  Input,
+  Text,
+  Spinner,
+  Center,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
+import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
 
 function App() {
+  const [titleQuery, setTitleQuery] = useState("")
+  const [artistQuery, setArtistQuery] = useState("")
+  const [songs, setSongs] = useState<Song[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [initialized, setInitialized] = useState(false)
+
+  // Initialize the database on component mount
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await initDatabase()
+        setInitialized(true)
+      } catch (err) {
+        console.error("Failed to initialize database:", err)
+        setError("Failed to initialize database. Please check the console for details.")
+      }
+    }
+    
+    init()
+  }, [])
+
+  // Search function
+  const handleSearch = useCallback(async () => {
+    if (!initialized) {
+      setError("Database not initialized yet. Please wait...")
+      return
+    }
+    
+    setLoading(true)
+    setError(null)
+    
+    try {
+      const results = await searchSongs(titleQuery, artistQuery)
+      setSongs(results)
+      
+      if (results.length === 0) {
+        setError("No songs found matching your search criteria.")
+      }
+    } catch (err) {
+      console.error("Error searching songs:", err)
+      setError("An error occurred while searching. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }, [titleQuery, artistQuery, initialized])
+
+  // Handle Enter key press in input fields
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch()
+    }
+  }
+
   return (
-    <Box textAlign="center" fontSize="xl" pt="30vh">
+    <Box textAlign="center" fontSize="xl" pt="20vh">
       <VStack gap="8">
-        <img alt="chakra logo" src="vite.svg" width="80" height="80" />
-        <Heading size="2xl" letterSpacing="tight">
-          Welcome to Chakra UI v3 + Vite
-        </Heading>
-
-        <HStack gap="10">
-          <Checkbox.Root defaultChecked>
-            <Checkbox.HiddenInput />
-            <Checkbox.Control>
-              <Checkbox.Indicator />
-            </Checkbox.Control>
-            <Checkbox.Label>Checkbox</Checkbox.Label>
-          </Checkbox.Root>
-
-          <RadioGroup.Root display="inline-flex" defaultValue="1">
-            <RadioGroup.Item value="1" mr="2">
-              <RadioGroup.ItemHiddenInput />
-              <RadioGroup.ItemControl>
-                <RadioGroup.ItemIndicator />
-              </RadioGroup.ItemControl>
-              <RadioGroup.ItemText lineHeight="1">Radio</RadioGroup.ItemText>
-            </RadioGroup.Item>
-
-            <RadioGroup.Item value="2">
-              <RadioGroup.ItemHiddenInput />
-              <RadioGroup.ItemControl>
-                <RadioGroup.ItemIndicator />
-              </RadioGroup.ItemControl>
-              <RadioGroup.ItemText lineHeight="1">Radio</RadioGroup.ItemText>
-            </RadioGroup.Item>
-          </RadioGroup.Root>
+        <Text fontSize="2xl" fontWeight="bold">
+          JOYSOUND Song Search
+        </Text>
+        
+        <HStack gap={4}>
+          <Input 
+            placeholder="Title" 
+            value={titleQuery}
+            onChange={(e) => setTitleQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <Input 
+            placeholder="Artist" 
+            value={artistQuery}
+            onChange={(e) => setArtistQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <Button 
+            onClick={handleSearch} 
+            loading={loading}
+            disabled={!initialized}
+          >
+            Search
+          </Button>
         </HStack>
-
-        <Progress.Root width="300px" value={65} striped>
-          <Progress.Track>
-            <Progress.Range />
-          </Progress.Track>
-        </Progress.Root>
-
-        <HStack>
-          <Button>Let's go!</Button>
-          <Button variant="outline">bun install @chakra-ui/react</Button>
-        </HStack>
+        
+        {error && (
+          <Text color="red.500">{error}</Text>
+        )}
+        
+        {loading ? (
+          <Center p={8}>
+            <Spinner size="xl" />
+          </Center>
+        ) : (
+          <Table.Root size="sm">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>Title</Table.ColumnHeader>
+                <Table.ColumnHeader>Artist</Table.ColumnHeader>
+                <Table.ColumnHeader textAlign="end">Song No.</Table.ColumnHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {songs.map((song) => (
+                <Table.Row key={`${song.id}-${song.song_no}`}>
+                  <Table.Cell>{song.title}</Table.Cell>
+                  <Table.Cell>{song.artist}</Table.Cell>
+                  <Table.Cell textAlign="end">{`${song.id}-${song.song_no}`}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        )}
       </VStack>
 
       <Box pos="absolute" top="4" right="4">
