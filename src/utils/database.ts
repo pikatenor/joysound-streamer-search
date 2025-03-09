@@ -2,6 +2,10 @@ import sqlite3InitModule, {
   Database,
   Sqlite3Static,
 } from "@sqlite.org/sqlite-wasm";
+import { KANA_COMMON_CAHRS as KANA_COMMON_CHARS } from "jaco/const/KANA_COMMON_CAHRS";
+import { HIRAGANA_CHARS } from "jaco/const/HIRAGANA_CHARS";
+import { KATAKANA_CHARS } from "jaco/const/KATAKANA_CHARS";
+import { isOnly, toKatakana } from "jaco";
 import dbSrc from "../assets/db.sqlite";
 
 export interface Song {
@@ -18,14 +22,12 @@ export async function initDatabase() {
   if (dbInstance) return dbInstance;
 
   try {
-    // Initialize SQLite
     sqlite3Instance = await sqlite3InitModule();
 
     // Fetch the database file
     const response = await fetch(dbSrc);
     const dbBuffer = await response.arrayBuffer();
 
-    // Create a new database
     dbInstance = new sqlite3Instance.oo1.DB({
       filename: ":memory:",
       flags: "t",
@@ -65,7 +67,8 @@ export async function initDatabase() {
 
 export async function searchSongs(
   title: string = "",
-  artist: string = ""
+  artist: string = "",
+  limit: number = 1000
 ): Promise<Song[]> {
   try {
     if (!dbInstance) {
@@ -81,42 +84,51 @@ export async function searchSongs(
       ,song_no
       ,title
       ,artist
-    FROM songs WHERE 1=1`;
+    FROM songs`;
     const params: string[] = [];
 
+    query += " WHERE 1=1";
     if (title) {
-      query += " AND title LIKE ?";
+      query += " AND (title LIKE ?";
       params.push(`%${title}%`);
+      if (isOnly(title, HIRAGANA_CHARS + KATAKANA_CHARS + KANA_COMMON_CHARS)) {
+        const kanaTitle = toKatakana(title);
+        query += " OR title_ruby like ?";
+        params.push(`${kanaTitle}%`);
+      }
+      query += ")";
     }
-
     if (artist) {
-      query += " AND artist LIKE ?";
+      query += " AND (artist LIKE ?";
       params.push(`%${artist}%`);
+      if (isOnly(artist, HIRAGANA_CHARS + KATAKANA_CHARS + KANA_COMMON_CHARS)) {
+        const kanaArtist = toKatakana(artist);
+        query += " OR artist_ruby like ?";
+        params.push(`${kanaArtist}%`);
+      }
+      query += ")";
     }
 
     query += " ORDER BY";
-
     if (title) {
       query += " title = ? DESC, ";
       params.push(`${title}`);
       query += " title like ? DESC, ";
       params.push(`${title}%`);
     }
-
     if (artist) {
       query += " artist = ? DESC, ";
       params.push(`${artist}`);
       query += " artist like ? DESC, ";
       params.push(`${artist}%`);
     }
-
     query += " id";
 
-    query += " LIMIT 100";
+    query += " LIMIT ?";
+    params.push(limit.toString());
 
     const results: Song[] = [];
 
-    // Use the exec method with row callback
     dbInstance.exec({
       sql: query,
       bind: params,
