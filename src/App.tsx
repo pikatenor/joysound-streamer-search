@@ -15,6 +15,9 @@ import {
   Card,
   Separator,
   Stack,
+  Container,
+  Flex,
+  Heading,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
 import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
@@ -78,75 +81,105 @@ function App() {
   }
 
   return (
-    <Box textAlign="center" fontSize="xl" pt="20vh">
-      <VStack gap="8">
-        <Text fontSize="2xl" fontWeight="bold">
-          JOYSOUND Song Search
-        </Text>
-        <HStack gap={4}>
-          <Input
-            placeholder="Title"
-            value={titleQuery}
-            onChange={(e) => setTitleQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-          <Input
-            placeholder="Artist"
-            value={artistQuery}
-            onChange={(e) => setArtistQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-          <Button
-            onClick={handleSearch}
-            loading={loading}
-            disabled={!initialized}
-          >
-            Search
-          </Button>
-        </HStack>
+    <Box>
+      {/* Fixed Navigation Bar */}
+      <Box
+        as="nav"
+        position="fixed"
+        top="0"
+        left="0"
+        right="0"
+        zIndex="sticky"
+        bg="bg.default"
+        borderBottom="1px"
+        borderColor="border.default"
+        py="3"
+        backdropFilter="blur(10px)"
+      >
+        <Container maxW="container.xl">
+          <Flex justify="space-between" align="center">
+            <Heading hideBelow="lg" fontWeight="bold">
+              JOYSOUND for STREAMER Search
+            </Heading>
 
-        {error && (
-          <Alert.Root status="error">
-            <Alert.Indicator />
-            <Alert.Description>{error}</Alert.Description>
-          </Alert.Root>
-        )}
+            <Flex flex="1" justify="center" maxW={{ base: "100%", md: "70%" }} mx="4">
+              <HStack gap={2} width="100%">
+                <Input
+                  placeholder="Title"
+                  value={titleQuery}
+                  onChange={(e) => setTitleQuery(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  size="sm"
+                />
+                <Input
+                  placeholder="Artist"
+                  value={artistQuery}
+                  onChange={(e) => setArtistQuery(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  size="sm"
+                />
+                <Button
+                  onClick={handleSearch}
+                  loading={loading}
+                  disabled={!initialized}
+                  size="sm"
+                >
+                  Search
+                </Button>
+              </HStack>
+            </Flex>
 
-        {loading ? (
-          <Center p={8}>
-            <Spinner size="xl" />
-          </Center>
-        ) : (
-          <Box>
-            <VStack gap="4">
-              {songs.map((song) => (
-                <Card.Root size="sm" width="100%">
-                  <Box hideFrom="md" pos="absolute" bottom="0" right="0">
-                    <Text color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
-                  </Box>
-                  <Card.Body gap="2">
-                    <Stack gap="2" direction={{ base: "column", md: "row" }}>
-                      <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`}>
-                        <Text fontWeight="semibold" textStyle="sm">{song.title}</Text>
-                      </Link>
-                      <Separator hideBelow="md" orientation="vertical"></Separator>
-                      <Text fontWeight="semibold" color="fg.muted" textStyle="sm">{song.artist}</Text>
-                      <Separator hideBelow="md" flex="1" opacity="0" />
-                      <Text hideBelow="md" flexShrink="0" color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
-                    </Stack>
-                    <Text color="fg.muted" textStyle="xs">{song.aux_info}</Text>
-                  </Card.Body>
-                </Card.Root>
-              ))}
-            </VStack>
-          </Box>
-        )}
-      </VStack>
+            <Box>
+              <ClientOnly fallback={<Skeleton w="8" h="8" rounded="md" />}>
+                <ColorModeToggle />
+              </ClientOnly>
+            </Box>
+          </Flex>
+        </Container>
+      </Box>
 
-      <Box pos="absolute" top="4" right="4">
-        <ClientOnly fallback={<Skeleton w="10" h="10" rounded="md" />}>
-          <ColorModeToggle />
-        </ClientOnly>
+      {/* Main Content */}
+      <Box pt="24" pb="8">
+        <Container maxW="container.xl">
+          <VStack gap="6">
+            {error && (
+              <Alert.Root status="error">
+                <Alert.Indicator />
+                <Alert.Description>{error}</Alert.Description>
+              </Alert.Root>
+            )}
+
+            {loading ? (
+              <Center p={8}>
+                <Spinner size="xl" />
+              </Center>
+            ) : (
+              <Box width="100%">
+                <VStack gap="4" align="stretch">
+                  {songs.map((song) => (
+                    <Card.Root key={`${song.id}-${song.song_no}`} size="sm" width="100%">
+                      <Box hideFrom="md" pos="absolute" bottom="0" right="0">
+                        <Text color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
+                      </Box>
+                      <Card.Body gap="2">
+                        <Stack gap="2" direction={{ base: "column", md: "row" }}>
+                          <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`}>
+                            <Text fontWeight="semibold" textStyle="sm">{song.title}</Text>
+                          </Link>
+                          <Separator hideBelow="md" orientation="vertical"></Separator>
+                          <Text fontWeight="semibold" color="fg.muted" textStyle="sm">{song.artist}</Text>
+                          <Separator hideBelow="md" flex="1" opacity="0" />
+                          <Text hideBelow="md" flexShrink="0" color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
+                        </Stack>
+                        <Text color="fg.muted" textStyle="xs">{song.aux_info}</Text>
+                      </Card.Body>
+                    </Card.Root>
+                  ))}
+                </VStack>
+              </Box>
+            )}
+          </VStack>
+        </Container>
       </Box>
     </Box>
   )
