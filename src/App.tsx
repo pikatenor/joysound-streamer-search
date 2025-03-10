@@ -12,9 +12,11 @@ import {
   Spinner,
   Center,
   Link,
+  Alert,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
 import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
+import { toaster } from "./components/ui/toaster.tsx"
 
 function App() {
   const [titleQuery, setTitleQuery] = useState("")
@@ -33,6 +35,7 @@ function App() {
       } catch (err) {
         console.error("Failed to initialize database:", err)
         setError("Failed to initialize database. Please check the console for details.")
+        toaster.error({ title: "Failed to initialize database", description: "Please check the console for details." })
       }
     }
     
@@ -59,6 +62,7 @@ function App() {
     } catch (err) {
       console.error("Error searching songs:", err)
       setError("An error occurred while searching. Please try again.")
+      toaster.error({ title: "An error occurred while searching", description: "Please try again." })
     } finally {
       setLoading(false)
     }
@@ -101,7 +105,10 @@ function App() {
         </HStack>
         
         {error && (
-          <Text color="red.500">{error}</Text>
+          <Alert.Root status="error">
+            <Alert.Indicator />
+            <Alert.Description>{error}</Alert.Description>
+          </Alert.Root>
         )}
         
         {loading ? (
