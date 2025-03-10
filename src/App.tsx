@@ -18,16 +18,20 @@ import {
   Container,
   Flex,
   Heading,
+  EmptyState,
+  List,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
 import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
 import { toaster } from "./components/ui/toaster.tsx"
+import { LuSearch } from "react-icons/lu"
 
 function App() {
   const [titleQuery, setTitleQuery] = useState("")
   const [artistQuery, setArtistQuery] = useState("")
   const [songs, setSongs] = useState<Song[]>([])
   const [loading, setLoading] = useState(false)
+  const [empty, setEmpty] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [initialized, setInitialized] = useState(false)
 
@@ -60,10 +64,8 @@ function App() {
     try {
       const results = await searchSongs(titleQuery, artistQuery)
       setSongs(results)
+      setEmpty(results.length === 0)
 
-      if (results.length === 0) {
-        setError("No songs found matching your search criteria.")
-      }
     } catch (err) {
       console.error("Error searching songs:", err)
       setError("An error occurred while searching. Please try again.")
@@ -176,6 +178,25 @@ function App() {
                     </Card.Root>
                   ))}
                 </VStack>
+                {empty && (
+                  <EmptyState.Root size="lg">
+                    <EmptyState.Content>
+                      <EmptyState.Indicator>
+                        <LuSearch />
+                      </EmptyState.Indicator>
+                      <VStack textAlign="center">
+                        <EmptyState.Title>検索結果なし</EmptyState.Title>
+                        <EmptyState.Description>
+                          No songs found matching your search criteria.
+                        </EmptyState.Description>
+                      </VStack>
+                      <List.Root variant="marker">
+                        <List.Item>曲名・アーティスト名を部分一致で検索します</List.Item>
+                        <List.Item>ひらがな・カタカナのみで入力すると読みがなでも検索します（前方一致）</List.Item>
+                      </List.Root>
+                    </EmptyState.Content>
+                  </EmptyState.Root>
+                )}
               </Box>
             )}
           </VStack>

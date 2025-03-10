@@ -81,6 +81,10 @@ export async function searchSongs(
       throw new Error("Database not initialized");
     }
 
+    if (title === "" && artist === "") {
+      return [];
+    }
+
     let query = `SELECT
       id
       ,song_no
