@@ -14,6 +14,7 @@ export interface Song {
   group_id: number;
   title: string;
   artist: string;
+  aux_info: string | null;
 }
 
 let sqlite3Instance: Sqlite3Static;
@@ -86,6 +87,7 @@ export async function searchSongs(
       ,group_id
       ,title
       ,artist
+      ,info
     FROM songs`;
     const params: string[] = [];
 
@@ -143,6 +145,7 @@ export async function searchSongs(
             group_id: Number(row[2]),
             title: String(row[3] || ""),
             artist: String(row[4] || ""),
+            aux_info: String(row[5]) || null,
           });
         }
       },

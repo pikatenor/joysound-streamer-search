@@ -5,7 +5,6 @@ import {
   ClientOnly,
   Skeleton,
   VStack,
-  Table,
   HStack,
   Input,
   Text,
@@ -13,6 +12,9 @@ import {
   Center,
   Link,
   Alert,
+  Card,
+  Separator,
+  Stack,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
 import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
@@ -38,7 +40,7 @@ function App() {
         toaster.error({ title: "Failed to initialize database", description: "Please check the console for details." })
       }
     }
-    
+
     init()
   }, [])
 
@@ -48,14 +50,14 @@ function App() {
       setError("Database not initialized yet. Please wait...")
       return
     }
-    
+
     setLoading(true)
     setError(null)
-    
+
     try {
       const results = await searchSongs(titleQuery, artistQuery)
       setSongs(results)
-      
+
       if (results.length === 0) {
         setError("No songs found matching your search criteria.")
       }
@@ -81,60 +83,63 @@ function App() {
         <Text fontSize="2xl" fontWeight="bold">
           JOYSOUND Song Search
         </Text>
-        
         <HStack gap={4}>
-          <Input 
-            placeholder="Title" 
+          <Input
+            placeholder="Title"
             value={titleQuery}
             onChange={(e) => setTitleQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <Input 
-            placeholder="Artist" 
+          <Input
+            placeholder="Artist"
             value={artistQuery}
             onChange={(e) => setArtistQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <Button 
-            onClick={handleSearch} 
+          <Button
+            onClick={handleSearch}
             loading={loading}
             disabled={!initialized}
           >
             Search
           </Button>
         </HStack>
-        
+
         {error && (
           <Alert.Root status="error">
             <Alert.Indicator />
             <Alert.Description>{error}</Alert.Description>
           </Alert.Root>
         )}
-        
+
         {loading ? (
           <Center p={8}>
             <Spinner size="xl" />
           </Center>
         ) : (
-          <Table.Root size="sm">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader>Title</Table.ColumnHeader>
-                <Table.ColumnHeader>Artist</Table.ColumnHeader>
-                <Table.ColumnHeader textAlign="end">Song No.</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
+          <Box>
+            <VStack gap="4">
               {songs.map((song) => (
-                <Table.Row key={`${song.id}-${song.song_no}`}>
-                  <Table.Cell>
-                    <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`}>{song.title}</Link></Table.Cell>
-                  <Table.Cell>{song.artist}</Table.Cell>
-                  <Table.Cell textAlign="end">{`${song.group_id}-${song.id} (${song.song_no})`}</Table.Cell>
-                </Table.Row>
+                <Card.Root size="sm" width="100%">
+                  <Box hideFrom="md" pos="absolute" bottom="0" right="0">
+                    <Text color="fg.subtle" textStyle="2xs">{`${song.group_id}-${song.id} (${song.song_no})`}</Text>
+                  </Box>
+                  <Card.Body gap="2">
+                    <Stack gap="2" direction={{ base: "column", md: "row" }}>
+                      <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`}>
+                        <Text fontWeight="semibold" textStyle="sm">{song.title}</Text>
+                      </Link>
+                      <Separator hideBelow="md" orientation="vertical"></Separator>
+                      <Text fontWeight="semibold" color="fg.muted" textStyle="sm">{song.artist}</Text>
+                      <Separator hideBelow="md" flex="1" opacity="0" />
+                      <Text hideBelow="md" flexShrink="0" color="fg.subtle" textStyle="2xs">{`${song.group_id}-${song.id} (${song.song_no})`}</Text>
+                    </Stack>
+                    <Text color="fg.muted" textStyle="xs">{song.aux_info}</Text>
+                  </Card.Body>
+                </Card.Root>
               ))}
-            </Table.Body>
-          </Table.Root>
+            </VStack>
+          </Box>
         )}
       </VStack>
 
