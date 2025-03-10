@@ -11,6 +11,7 @@ import dbSrc from "../assets/db.sqlite";
 export interface Song {
   id: number;
   song_no: number;
+  group_id: number;
   title: string;
   artist: string;
 }
@@ -82,6 +83,7 @@ export async function searchSongs(
     let query = `SELECT
       id
       ,song_no
+      ,group_id
       ,title
       ,artist
     FROM songs`;
@@ -138,8 +140,9 @@ export async function searchSongs(
           results.push({
             id: Number(row[0]),
             song_no: Number(row[1]),
-            title: String(row[2] || ""),
-            artist: String(row[3] || ""),
+            group_id: Number(row[2]),
+            title: String(row[3] || ""),
+            artist: String(row[4] || ""),
           });
         }
       },

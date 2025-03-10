@@ -11,6 +11,7 @@ import {
   Text,
   Spinner,
   Center,
+  Link,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
 import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
@@ -119,9 +120,10 @@ function App() {
             <Table.Body>
               {songs.map((song) => (
                 <Table.Row key={`${song.id}-${song.song_no}`}>
-                  <Table.Cell>{song.title}</Table.Cell>
+                  <Table.Cell>
+                    <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`}>{song.title}</Link></Table.Cell>
                   <Table.Cell>{song.artist}</Table.Cell>
-                  <Table.Cell textAlign="end">{`${song.id}-${song.song_no}`}</Table.Cell>
+                  <Table.Cell textAlign="end">{`${song.group_id}-${song.id} (${song.song_no})`}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
