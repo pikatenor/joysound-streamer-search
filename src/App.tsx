@@ -122,7 +122,7 @@ function App() {
               {songs.map((song) => (
                 <Card.Root size="sm" width="100%">
                   <Box hideFrom="md" pos="absolute" bottom="0" right="0">
-                    <Text color="fg.subtle" textStyle="2xs">{`${song.group_id}-${song.id} (${song.song_no})`}</Text>
+                    <Text color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
                   </Box>
                   <Card.Body gap="2">
                     <Stack gap="2" direction={{ base: "column", md: "row" }}>
@@ -132,7 +132,7 @@ function App() {
                       <Separator hideBelow="md" orientation="vertical"></Separator>
                       <Text fontWeight="semibold" color="fg.muted" textStyle="sm">{song.artist}</Text>
                       <Separator hideBelow="md" flex="1" opacity="0" />
-                      <Text hideBelow="md" flexShrink="0" color="fg.subtle" textStyle="2xs">{`${song.group_id}-${song.id} (${song.song_no})`}</Text>
+                      <Text hideBelow="md" flexShrink="0" color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
                     </Stack>
                     <Text color="fg.muted" textStyle="xs">{song.aux_info}</Text>
                   </Card.Body>
