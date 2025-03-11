@@ -20,6 +20,8 @@ import {
   Heading,
   EmptyState,
   List,
+  NativeSelect,
+  Em,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
 import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
@@ -34,6 +36,8 @@ function App() {
   const [empty, setEmpty] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [initialized, setInitialized] = useState(false)
+  const [limit, setLimit] = useState(50)
+  const [totalCount, setTotalCount] = useState(0)
 
   // Initialize the database on component mount
   useEffect(() => {
@@ -62,10 +66,10 @@ function App() {
     setError(null)
 
     try {
-      const { results, total } = await searchSongs(titleQuery, artistQuery)
+      const { results, total } = await searchSongs(titleQuery, artistQuery, limit)
       setSongs(results)
+      setTotalCount(total)
       setEmpty(results.length === 0)
-
     } catch (err) {
       console.error("Error searching songs:", err)
       setError("An error occurred while searching. Please try again.")
@@ -73,7 +77,7 @@ function App() {
     } finally {
       setLoading(false)
     }
-  }, [titleQuery, artistQuery, initialized])
+  }, [titleQuery, artistQuery, initialized, limit])
 
   // Handle Enter key press in input fields
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -92,11 +96,11 @@ function App() {
         left="0"
         right="0"
         zIndex="sticky"
-        bg="bg.default"
+        bg="bg.panel"
         borderBottom="1px"
         borderColor="border.default"
         py="3"
-        backdropFilter="blur(10px)"
+        shadow="sm"
       >
         <Container maxW="container.xl">
           <Flex justify="space-between" align="center">
@@ -201,6 +205,42 @@ function App() {
             )}
           </VStack>
         </Container>
+      </Box>
+
+      {/* Fixed Results Count and Limit Control */}
+      <Box
+        position="fixed"
+        bottom="0"
+        right="0"
+        bg="bg.panel"
+        borderWidth="1px"
+        borderColor="border.default"
+        roundedTopLeft="lg"
+        p="2"
+        shadow="sm"
+      >
+        <VStack gap="2" align="stretch">
+          <HStack gap="2" fontSize="xs" color="fg.muted">
+            <Text><Em fontWeight="bold" fontStyle="normal">{totalCount}</Em> 件ヒット</Text>
+            <NativeSelect.Root
+              size="xs"
+              width="auto"
+            >
+              <NativeSelect.Field
+                value={limit}
+                onChange={(e) => setLimit(Number(e.target.value))}
+              >
+                <option value="10">10(軽)</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500(重)</option>
+                <option value="50000">限界</option>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+            <Text>件まで表示</Text>
+          </HStack>
+        </VStack>
       </Box>
     </Box>
   )
