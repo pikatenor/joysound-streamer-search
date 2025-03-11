@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react";
+import { useDebounce } from "./hooks/useDebounce";
 import {
   Box,
-  Button,
   ClientOnly,
   Skeleton,
   VStack,
@@ -56,35 +56,33 @@ function App() {
   }, [])
 
   // Search function
-  const handleSearch = useCallback(async () => {
-    if (!initialized) {
-      setError("Database not initialized yet. Please wait...")
-      return
-    }
+  // Debounce search inputs
+  const debounceMs = 20
+  const debouncedTitle = useDebounce(titleQuery, debounceMs);
+  const debouncedArtist = useDebounce(artistQuery, debounceMs);
+  useEffect(() => {
+    if (!initialized) return;
 
-    setLoading(true)
-    setError(null)
+    const search = async () => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const { results, total } = await searchSongs(titleQuery, artistQuery, limit)
-      setSongs(results)
-      setTotalCount(total)
-      setEmpty(results.length === 0)
-    } catch (err) {
-      console.error("Error searching songs:", err)
-      setError("An error occurred while searching. Please try again.")
-      toaster.error({ title: "An error occurred while searching", description: "Please try again." })
-    } finally {
-      setLoading(false)
-    }
-  }, [titleQuery, artistQuery, initialized, limit])
+      try {
+        const { results, total } = await searchSongs(debouncedTitle, debouncedArtist, limit);
+        setSongs(results);
+        setTotalCount(total);
+        setEmpty(results.length === 0);
+      } catch (err) {
+        console.error("Error searching songs:", err);
+        setError("An error occurred while searching. Please try again.");
+        toaster.error({ title: "An error occurred while searching", description: "Please try again." });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Handle Enter key press in input fields
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearch()
-    }
-  }
+    search();
+  }, [debouncedTitle, debouncedArtist, limit, initialized]);
 
   return (
     <Box>
@@ -111,27 +109,19 @@ function App() {
             <Flex flex="1" justify="center" maxW={{ base: "100%", md: "70%" }} mx="4">
               <HStack gap={2} width="100%">
                 <Input
-                  placeholder="Title"
+                  placeholder="曲名"
                   value={titleQuery}
                   onChange={(e) => setTitleQuery(e.target.value)}
-                  onKeyDown={handleKeyDown}
                   size="sm"
+                  disabled={!initialized}
                 />
                 <Input
-                  placeholder="Artist"
+                  placeholder="アーティスト"
                   value={artistQuery}
                   onChange={(e) => setArtistQuery(e.target.value)}
-                  onKeyDown={handleKeyDown}
                   size="sm"
-                />
-                <Button
-                  onClick={handleSearch}
-                  loading={loading}
                   disabled={!initialized}
-                  size="sm"
-                >
-                  Search
-                </Button>
+                />
               </HStack>
             </Flex>
 

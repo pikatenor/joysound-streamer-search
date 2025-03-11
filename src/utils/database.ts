@@ -1,7 +1,6 @@
 import sqlite3InitModule, {
   Database,
   Sqlite3Static,
-  SqlValue,
 } from "@sqlite.org/sqlite-wasm";
 import { KANA_COMMON_CAHRS as KANA_COMMON_CHARS } from "jaco/const/KANA_COMMON_CAHRS";
 import { HIRAGANA_CHARS } from "jaco/const/HIRAGANA_CHARS";
