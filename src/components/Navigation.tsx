@@ -1,10 +1,10 @@
+import { memo } from "react";
 import {
   Box,
   Container,
   Flex,
   Heading,
 } from "@chakra-ui/react";
-import { memo } from "react";
 import { ColorModeToggle } from "./color-mode-toggle";
 import { InfoDialog } from "./InfoDialog";
 import { SearchForm } from "./SearchForm";

@@ -1,6 +1,5 @@
-import { Song } from "./utils/database";
+import { Song } from "./entity";
 
-// アプリケーションの状態を表す型
 export interface AppState {
   // 検索クエリ
   titleQuery: string;
@@ -20,13 +19,11 @@ export interface AppState {
   initialized: boolean;
 }
 
-// 検索結果の型
 export interface SearchResult {
   results: Song[];
   total: number;
 }
 
-// エラーハンドリングの型
 export interface ErrorInfo {
   title: string;
   description: string;

@@ -1,9 +1,9 @@
+import { memo } from "react";
 import {
   HStack,
   Input,
   Flex,
 } from "@chakra-ui/react";
-import { memo } from "react";
 
 interface SearchFormProps {
   titleQuery: string;

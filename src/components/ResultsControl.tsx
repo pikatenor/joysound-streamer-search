@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   Box,
   Em,
@@ -6,8 +7,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { memo } from "react";
-import { LIMIT_OPTIONS } from "../constants";
+
+const LIMIT_OPTIONS = [
+  { value: 10, label: "10(軽)" },
+  { value: 50, label: "50" },
+  { value: 100, label: "100" },
+  { value: 500, label: "500(重)" },
+  { value: 50000, label: "限界" },
+];
 
 interface ResultsControlProps {
   totalCount: number;

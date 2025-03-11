@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   CloseButton,
   Dialog,
@@ -8,7 +9,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { LuExternalLink, LuInfo } from "react-icons/lu";
-import { memo } from "react";
 
 export const InfoDialog = memo(function InfoDialog() {
   return (

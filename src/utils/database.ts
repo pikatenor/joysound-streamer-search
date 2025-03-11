@@ -6,16 +6,9 @@ import { KANA_COMMON_CAHRS as KANA_COMMON_CHARS } from "jaco/const/KANA_COMMON_C
 import { HIRAGANA_CHARS } from "jaco/const/HIRAGANA_CHARS";
 import { KATAKANA_CHARS } from "jaco/const/KATAKANA_CHARS";
 import { isOnly, toKatakana } from "jaco";
+import { Song } from "../types/entity";
+import { SearchResult } from "../types/app";
 import dbSrc from "../assets/db.sqlite";
-
-export interface Song {
-  id: number;
-  song_no: number;
-  group_id: number;
-  title: string;
-  artist: string;
-  aux_info: string | null;
-}
 
 let sqlite3Instance: Sqlite3Static;
 let dbInstance: Database;
@@ -71,7 +64,7 @@ export async function searchSongs(
   title: string = "",
   artist: string = "",
   limit: number = 100
-): Promise<{ results: Song[]; total: number }> {
+): Promise<SearchResult> {
   const start = performance.now();
   try {
     if (!dbInstance) {

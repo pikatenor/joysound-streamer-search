@@ -1,5 +1,5 @@
+import { ErrorInfo } from "../types/app";
 import { toaster } from "../components/ui/toaster";
-import { ErrorInfo } from "../types";
 
 /**
  * エラーをコンソールに出力し、トースト通知を表示する

@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Song } from "../utils/database";
+import { Song } from "../types/entity";
 
 interface SongCardProps {
   song: Song;

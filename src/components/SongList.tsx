@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   Box,
   Center,
@@ -7,9 +8,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";
-import { Song } from "../utils/database";
+import { Song } from "../types/entity";
 import { SongCard } from "./SongCard";
-import { memo } from "react";
 
 interface SongListProps {
   songs: Song[];

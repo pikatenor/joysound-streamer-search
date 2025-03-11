@@ -2,7 +2,7 @@ import { Box, Container, VStack, Alert } from "@chakra-ui/react";
 import { Navigation } from "./components/Navigation";
 import { SongList } from "./components/SongList";
 import { ResultsControl } from "./components/ResultsControl";
-import { useAppContext } from "./contexts/AppContext";
+import { useAppContext } from "./AppContext";
 
 function App() {
   const {
@@ -22,7 +22,6 @@ function App() {
 
   return (
     <Box>
-      {/* ナビゲーションバー */}
       <Navigation
         titleQuery={titleQuery}
         artistQuery={artistQuery}
@@ -31,7 +30,6 @@ function App() {
         disabled={!initialized}
       />
 
-      {/* メインコンテンツ */}
       <Box pt="24" pb="8">
         <Container maxW="container.xl">
           <VStack gap="6">
@@ -51,7 +49,6 @@ function App() {
         </Container>
       </Box>
 
-      {/* 検索結果数と表示件数制御 */}
       <ResultsControl
         totalCount={totalCount}
         limit={limit}
