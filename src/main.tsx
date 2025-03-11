@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ChakraProvider, createSystem, defaultConfig } from "@chakra-ui/react"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "./components/ui/toaster"
+import { AppProvider } from './contexts/AppContext'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
@@ -33,8 +34,10 @@ createRoot(document.getElementById('root')!).render(
       },
     })}>
       <ThemeProvider attribute="class" disableTransitionOnChange>
-        <Toaster />
-        <App />
+        <AppProvider>
+          <Toaster />
+          <App />
+        </AppProvider>
       </ThemeProvider>
     </ChakraProvider>
   </StrictMode>,
