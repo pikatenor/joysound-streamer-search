@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useDebounce } from "./hooks/useDebounce";
 import {
   Box,
-  ClientOnly,
-  Skeleton,
   VStack,
   HStack,
   Input,
@@ -22,11 +20,15 @@ import {
   List,
   NativeSelect,
   Em,
+  Dialog,
+  Portal,
+  IconButton,
+  CloseButton,
 } from "@chakra-ui/react"
 import { ColorModeToggle } from "./components/color-mode-toggle.tsx"
 import { initDatabase, searchSongs, type Song } from "./utils/database.ts"
 import { toaster } from "./components/ui/toaster.tsx"
-import { LuSearch } from "react-icons/lu"
+import { LuExternalLink, LuInfo, LuSearch } from "react-icons/lu"
 
 function App() {
   const [titleQuery, setTitleQuery] = useState("")
@@ -102,9 +104,45 @@ function App() {
       >
         <Container maxW="container.xl">
           <Flex justify="space-between" align="center">
-            <Heading hideBelow="lg" fontWeight="bold">
+            <Heading hideBelow="lg" fontWeight="bold" marginEnd="4">
               JOYSOUND for STREAMER Search
             </Heading>
+
+            <Box>
+              <Dialog.Root placement="center">
+                <Dialog.Trigger asChild>
+                  <IconButton>
+                    <LuInfo />
+                  </IconButton>
+                </Dialog.Trigger>
+                <Portal>
+                  <Dialog.Backdrop />
+                  <Dialog.Positioner>
+                    <Dialog.Content>
+                      <Dialog.Header>
+                        <Dialog.Title>カラオケJOYSOUND for STREAMER 検索</Dialog.Title>
+                      </Dialog.Header>
+                      <Dialog.Body>
+                        <Stack gap="2">
+                          <Text>
+                            このアプリでは、<Link href="https://store.steampowered.com/app/2939590" target="_blank">カラオケJOYSOUND for STREAMER <LuExternalLink /></Link> の収録楽曲を検索することができます。
+                          </Text>
+                          <Text>
+                            曲名とアーティスト名から部分一致で検索できます。ひらがな・カタカナのみで入力すると読みがなでも検索します。
+                          </Text>
+                          <Text>
+                            このアプリはJOYSOUND運営（株式会社エクシング）とは無関係の非公式アプリであり、情報の正確性を保証するものではありません。実際の収録内容については公式アプリ内でご確認ください。
+                          </Text>
+                        </Stack>
+                      </Dialog.Body>
+                      <Dialog.CloseTrigger asChild>
+                        <CloseButton size="sm" />
+                      </Dialog.CloseTrigger>
+                    </Dialog.Content>
+                  </Dialog.Positioner>
+                </Portal>
+              </Dialog.Root>
+            </Box>
 
             <Flex flex="1" justify="center" maxW={{ base: "100%", md: "70%" }} mx="4">
               <HStack gap={2} width="100%">
@@ -126,9 +164,7 @@ function App() {
             </Flex>
 
             <Box>
-              <ClientOnly fallback={<Skeleton w="8" h="8" rounded="md" />}>
-                <ColorModeToggle />
-              </ClientOnly>
+              <ColorModeToggle />
             </Box>
           </Flex>
         </Container>
