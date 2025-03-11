@@ -73,6 +73,7 @@ export async function searchSongs(
   artist: string = "",
   limit: number = 100
 ): Promise<{ results: Song[]; total: number }> {
+  const start = performance.now();
   try {
     if (!dbInstance) {
       await initDatabase();
@@ -139,16 +140,16 @@ export async function searchSongs(
     dbInstance.exec({
       sql: query,
       bind: params,
-      rowMode: "array",
+      rowMode: "stmt",
       callback: (row) => {
-        if (row && results.length < limit) {
+        if (results.length < limit) {
           results.push({
-            id: Number(row[0]),
-            song_no: Number(row[1]),
-            group_id: Number(row[2]),
-            title: String(row[3] || ""),
-            artist: String(row[4] || ""),
-            aux_info: row[5] ? String(row[5]) : null,
+            id: row.getInt(0) || 0,
+            song_no: row.getInt(1) || 0,
+            group_id: row.getInt(2) || 0,
+            title: row.getString(3) || "",
+            artist: row.getString(4) || "",
+            aux_info: row.getString(5),
           });
         }
         count++;
@@ -158,5 +159,7 @@ export async function searchSongs(
     return { results: results, total: count };
   } catch (error) {
     throw error;
+  } finally {
+    console.log(`Search took ${performance.now() - start}ms`);
   }
 }
