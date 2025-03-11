@@ -1,6 +1,7 @@
 import sqlite3InitModule, {
   Database,
   Sqlite3Static,
+  SqlValue,
 } from "@sqlite.org/sqlite-wasm";
 import { KANA_COMMON_CAHRS as KANA_COMMON_CHARS } from "jaco/const/KANA_COMMON_CAHRS";
 import { HIRAGANA_CHARS } from "jaco/const/HIRAGANA_CHARS";
@@ -70,8 +71,8 @@ export async function initDatabase() {
 export async function searchSongs(
   title: string = "",
   artist: string = "",
-  limit: number = 1000
-): Promise<Song[]> {
+  limit: number = 100
+): Promise<{ results: Song[]; total: number }> {
   try {
     if (!dbInstance) {
       await initDatabase();
@@ -82,7 +83,7 @@ export async function searchSongs(
     }
 
     if (title === "" && artist === "") {
-      return [];
+      return { results: [], total: 0 };
     }
 
     let query = `SELECT
@@ -132,30 +133,29 @@ export async function searchSongs(
     }
     query += " id";
 
-    query += " LIMIT ?";
-    params.push(limit.toString());
-
     const results: Song[] = [];
+    let count = 0;
 
     dbInstance.exec({
       sql: query,
       bind: params,
       rowMode: "array",
-      callback: (row: any[]) => {
-        if (row) {
+      callback: (row) => {
+        if (row && results.length < limit) {
           results.push({
             id: Number(row[0]),
             song_no: Number(row[1]),
             group_id: Number(row[2]),
             title: String(row[3] || ""),
             artist: String(row[4] || ""),
-            aux_info: String(row[5]) || null,
+            aux_info: row[5] ? String(row[5]) : null,
           });
         }
+        count++;
       },
     });
 
-    return results;
+    return { results: results, total: count };
   } catch (error) {
     throw error;
   }

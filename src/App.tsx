@@ -62,7 +62,7 @@ function App() {
     setError(null)
 
     try {
-      const results = await searchSongs(titleQuery, artistQuery)
+      const { results, total } = await searchSongs(titleQuery, artistQuery)
       setSongs(results)
       setEmpty(results.length === 0)
 
