@@ -14,8 +14,6 @@ let sqlite3Instance: Sqlite3Static;
 let dbInstance: Database;
 
 export async function initDatabase() {
-  if (dbInstance) return dbInstance;
-
   try {
     sqlite3Instance = await sqlite3InitModule();
 
@@ -23,7 +21,7 @@ export async function initDatabase() {
     const response = await fetch(dbSrc);
     const dbBuffer = await response.arrayBuffer();
 
-    dbInstance = new sqlite3Instance.oo1.DB({
+    const db = new sqlite3Instance.oo1.DB({
       filename: ":memory:",
       flags: "t",
     });
@@ -34,26 +32,31 @@ export async function initDatabase() {
     );
     try {
       const rc = sqlite3Instance.capi.sqlite3_deserialize(
-        dbInstance,
+        db,
         "main",
         p,
         dbBuffer.byteLength,
         dbBuffer.byteLength,
         sqlite3Instance.capi.SQLITE_DESERIALIZE_READONLY
       );
-      dbInstance.checkRc(rc);
+      db.checkRc(rc);
     } catch (error) {
       throw new Error(`Database deserialization failed with ${error}`);
     } finally {
-      dbInstance.onclose = {
+      db.onclose = {
         after() {
           sqlite3Instance.wasm.dealloc(p);
         },
       };
     }
 
+    // Check if the database is loaded correctly
+    db.exec("SELECT 1");
+
     console.log("Database initialized successfully");
-    return dbInstance;
+
+    dbInstance = db;
+    return db;
   } catch (error) {
     console.error("Failed to initialize database:", error);
     throw error;
@@ -67,10 +70,6 @@ export async function searchSongs(
 ): Promise<SearchResult> {
   const start = performance.now();
   try {
-    if (!dbInstance) {
-      await initDatabase();
-    }
-
     if (!dbInstance) {
       throw new Error("Database not initialized");
     }

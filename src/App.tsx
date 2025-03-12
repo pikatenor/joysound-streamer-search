@@ -42,7 +42,7 @@ function App() {
 
             <SongList
               songs={songs}
-              loading={loading}
+              loading={loading || !initialized}
               empty={empty}
             />
           </VStack>
