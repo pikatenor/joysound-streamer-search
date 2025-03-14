@@ -154,3 +154,26 @@ export async function searchSongs(
     console.log(`Search took ${performance.now() - start}ms`);
   }
 }
+
+export async function getLastUpdatedDate(): Promise<string | null> {
+  try {
+    if (!dbInstance) {
+      throw new Error("Database not initialized");
+    }
+
+    let result: string | null = null;
+
+    dbInstance.exec({
+      sql: "SELECT updated_at FROM meta LIMIT 1",
+      rowMode: "stmt",
+      callback: (row) => {
+        result = row.getString(0);
+      },
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Failed to get last updated date:", error);
+    return null;
+  }
+}

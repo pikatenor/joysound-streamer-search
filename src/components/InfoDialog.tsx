@@ -1,3 +1,5 @@
+import { useAppContext } from "../AppContext";
+import { useLastUpdatedDate } from "../hooks/useLastUpdatedDate";
 import {
   CloseButton,
   Dialog,
@@ -10,6 +12,17 @@ import {
 import { LuExternalLink, LuInfo } from "react-icons/lu";
 
 export const InfoDialog = () => {
+  const { initialized } = useAppContext();
+  const { lastUpdated } = useLastUpdatedDate(initialized);
+
+  // Format the date for display
+  const formattedDate = lastUpdated
+    ? new Date(lastUpdated).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+    : null;
   return (
     <Dialog.Root placement="center">
       <Dialog.Trigger asChild>
@@ -35,6 +48,11 @@ export const InfoDialog = () => {
                 <Text>
                   このアプリはJOYSOUND運営（株式会社エクシング）とは無関係の非公式アプリであり、情報の正確性を保証するものではありません。実際の収録内容については公式アプリ内でご確認ください。
                 </Text>
+                {formattedDate && (
+                  <Text fontSize="sm" color="gray.500">
+                    データ最終更新日: {formattedDate}
+                  </Text>
+                )}
               </Stack>
             </Dialog.Body>
             <Dialog.CloseTrigger asChild>
