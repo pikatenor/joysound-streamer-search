@@ -1,8 +1,7 @@
-import { useAppContext } from "../AppContext";
-import { useLastUpdatedDate } from "../hooks/useLastUpdatedDate";
 import {
   CloseButton,
   Dialog,
+  HStack,
   IconButton,
   Link,
   Portal,
@@ -10,6 +9,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { LuExternalLink, LuInfo } from "react-icons/lu";
+import { BsGithub } from "react-icons/bs";
+import { useAppContext } from "../AppContext";
+import { useLastUpdatedDate } from "../hooks/useLastUpdatedDate";
+
+const GITHUB_URL = "https://github.com/pikatenor/joysound-streamer-search"
 
 export const InfoDialog = () => {
   const { initialized } = useAppContext();
@@ -38,7 +42,7 @@ export const InfoDialog = () => {
             <Dialog.Body>
               <Stack gap="2">
                 <Text>
-                  このアプリでは、<Link href="https://store.steampowered.com/app/2939590" target="_blank">カラオケJOYSOUND for STREAMER <LuExternalLink /></Link> の収録楽曲を検索することができます。
+                  このアプリでは、<Link href="https://store.steampowered.com/app/2939590" target="_blank" rel="noopener noreferrer">カラオケJOYSOUND for STREAMER <LuExternalLink /></Link> の収録楽曲を検索することができます。
                 </Text>
                 <Text>
                   曲名とアーティスト名から部分一致で検索できます。ひらがな・カタカナのみで入力すると読みがなでも検索します。
@@ -51,6 +55,18 @@ export const InfoDialog = () => {
                     楽曲データ最終更新日: {formattedDate}
                   </Text>
                 )}
+                <HStack gap="1">
+                  <IconButton
+                    size="sm"
+                    variant="ghost"
+                    asChild
+                    aria-label="github link"
+                  >
+                    <Link href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+                      <BsGithub />
+                    </Link>
+                  </IconButton>
+                </HStack>
               </Stack>
             </Dialog.Body>
             <Dialog.CloseTrigger asChild>
