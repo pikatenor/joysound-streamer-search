@@ -14,10 +14,9 @@ import { SongCard } from "./SongCard";
 interface SongListProps {
   songs: Song[];
   loading: boolean;
-  empty: boolean;
 }
 
-export const SongList = memo(function SongList({ songs, loading, empty }: SongListProps) {
+export const SongList = memo(function SongList({ songs, loading }: SongListProps) {
   if (loading) {
     return (
       <Center p={8}>
@@ -26,7 +25,7 @@ export const SongList = memo(function SongList({ songs, loading, empty }: SongLi
     );
   }
 
-  if (empty) {
+  if (songs.length === 0) {
     return (
       <EmptyState.Root size="lg">
         <EmptyState.Content>

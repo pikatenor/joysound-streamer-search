@@ -12,7 +12,6 @@ function App() {
     totalCount,
     limit,
     loading,
-    empty,
     error,
     initialized,
     setTitleQuery,
@@ -43,7 +42,6 @@ function App() {
             <SongList
               songs={songs}
               loading={loading || !initialized}
-              empty={empty}
             />
           </VStack>
         </Container>
