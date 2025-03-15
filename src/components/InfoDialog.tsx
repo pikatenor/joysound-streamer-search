@@ -1,3 +1,5 @@
+import { useAppContext } from "../AppContext";
+import { useLastUpdatedDate } from "../hooks/useLastUpdatedDate";
 import {
   CloseButton,
   Dialog,
@@ -10,6 +12,15 @@ import {
 import { LuExternalLink, LuInfo } from "react-icons/lu";
 
 export const InfoDialog = () => {
+  const { initialized } = useAppContext();
+  const { lastUpdated } = useLastUpdatedDate(initialized);
+
+  const formattedDate = lastUpdated?.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   return (
     <Dialog.Root placement="center">
       <Dialog.Trigger asChild>
@@ -33,8 +44,13 @@ export const InfoDialog = () => {
                   曲名とアーティスト名から部分一致で検索できます。ひらがな・カタカナのみで入力すると読みがなでも検索します。
                 </Text>
                 <Text>
-                  このアプリはJOYSOUND運営（株式会社エクシング）とは無関係の非公式アプリであり、情報の正確性を保証するものではありません。実際の収録内容については公式アプリ内でご確認ください。
+                  このアプリはJOYSOUND運営（株式会社エクシング）とは無関係の非公式アプリであり、情報の正確性を保証するものではありません。実際の収録内容については公式サイト・SNSやカラオケJOYSOUNDゲーム内でご確認ください。
                 </Text>
+                {formattedDate && (
+                  <Text fontSize="sm" color="gray.500">
+                    楽曲データ最終更新日: {formattedDate}
+                  </Text>
+                )}
               </Stack>
             </Dialog.Body>
             <Dialog.CloseTrigger asChild>
