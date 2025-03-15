@@ -1,7 +1,7 @@
 import { Box, Container, VStack, Alert } from "@chakra-ui/react";
 import { Navigation } from "./components/Navigation";
-import { SongList } from "./components/SongList";
 import { ResultsControl } from "./components/ResultsControl";
+import { ResultsView } from "./components/ResultsView";
 import { useAppContext } from "./AppContext";
 
 function App() {
@@ -12,7 +12,6 @@ function App() {
     totalCount,
     limit,
     loading,
-    empty,
     error,
     initialized,
     setTitleQuery,
@@ -40,10 +39,9 @@ function App() {
               </Alert.Root>
             )}
 
-            <SongList
+            <ResultsView
               songs={songs}
               loading={loading || !initialized}
-              empty={empty}
             />
           </VStack>
         </Container>

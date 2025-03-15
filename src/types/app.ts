@@ -14,7 +14,6 @@ export interface AppState {
 
   // 状態フラグ
   loading: boolean;
-  empty: boolean;
   error: string | null;
   initialized: boolean;
 }

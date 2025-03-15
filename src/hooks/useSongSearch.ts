@@ -14,7 +14,6 @@ interface UseSongSearchProps {
 
 interface UseSongSearchResult extends SearchResult {
   loading: boolean;
-  empty: boolean;
   error: string | null;
 }
 
@@ -27,7 +26,6 @@ export function useSongSearch({
   const [results, setResults] = useState<Song[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [empty, setEmpty] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const SEARCH_DEBOUNCE_MS = 20;
@@ -49,7 +47,6 @@ export function useSongSearch({
         );
         setResults(results);
         setTotal(total);
-        setEmpty(results.length === 0);
       } catch (err) {
         const errorMessage = handleSearchError(err);
         setError(errorMessage);
@@ -65,7 +62,6 @@ export function useSongSearch({
     results,
     total,
     loading,
-    empty,
     error,
   };
 }

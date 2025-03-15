@@ -1,4 +1,3 @@
-import { memo } from "react";
 import {
   CloseButton,
   Dialog,
@@ -10,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { LuExternalLink, LuInfo } from "react-icons/lu";
 
-export const InfoDialog = memo(function InfoDialog() {
+export const InfoDialog = () => {
   return (
     <Dialog.Root placement="center">
       <Dialog.Trigger asChild>
@@ -46,4 +45,4 @@ export const InfoDialog = memo(function InfoDialog() {
       </Portal>
     </Dialog.Root>
   );
-});
+};

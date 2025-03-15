@@ -1,4 +1,3 @@
-import { memo } from "react";
 import {
   Box,
   Em,
@@ -22,11 +21,7 @@ interface ResultsControlProps {
   onLimitChange: (limit: number) => void;
 }
 
-export const ResultsControl = memo(function ResultsControl({
-  totalCount,
-  limit,
-  onLimitChange,
-}: ResultsControlProps) {
+export const ResultsControl = ({ totalCount, limit, onLimitChange }: ResultsControlProps) => {
   return (
     <Box
       position="fixed"
@@ -63,4 +58,4 @@ export const ResultsControl = memo(function ResultsControl({
       </VStack>
     </Box>
   );
-});
+};

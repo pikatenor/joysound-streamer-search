@@ -18,7 +18,6 @@ const defaultContext: AppContextType = {
   totalCount: 0,
   limit: DEFAULT_LIMIT,
   loading: false,
-  empty: true,
   error: null,
   initialized: false,
   setTitleQuery: () => { },
@@ -41,7 +40,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     results: songs,
     total: totalCount,
     loading,
-    empty,
     error: searchError,
   } = useSongSearch({
     titleQuery,
@@ -60,7 +58,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     totalCount,
     limit,
     loading,
-    empty,
     error,
     initialized,
     setTitleQuery,
