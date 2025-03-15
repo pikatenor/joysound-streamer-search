@@ -6,3 +6,5 @@ export interface Song {
   artist: string;
   aux_info: string | null;
 }
+
+export type LastUpdate = Date;

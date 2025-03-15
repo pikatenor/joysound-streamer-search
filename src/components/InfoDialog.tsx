@@ -15,14 +15,12 @@ export const InfoDialog = () => {
   const { initialized } = useAppContext();
   const { lastUpdated } = useLastUpdatedDate(initialized);
 
-  // Format the date for display
-  const formattedDate = lastUpdated
-    ? new Date(lastUpdated).toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-    : null;
+  const formattedDate = lastUpdated?.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   return (
     <Dialog.Root placement="center">
       <Dialog.Trigger asChild>

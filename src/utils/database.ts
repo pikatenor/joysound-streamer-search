@@ -6,7 +6,7 @@ import { KANA_COMMON_CAHRS as KANA_COMMON_CHARS } from "jaco/const/KANA_COMMON_C
 import { HIRAGANA_CHARS } from "jaco/const/HIRAGANA_CHARS";
 import { KATAKANA_CHARS } from "jaco/const/KATAKANA_CHARS";
 import { isOnly, toKatakana } from "jaco";
-import { Song } from "../types/entity";
+import { LastUpdate, Song } from "../types/entity";
 import { SearchResult } from "../types/app";
 import dbSrc from "../assets/db.sqlite";
 
@@ -155,23 +155,23 @@ export async function searchSongs(
   }
 }
 
-export async function getLastUpdatedDate(): Promise<string | null> {
+export async function getLastUpdatedDate(): Promise<LastUpdate | null> {
   try {
     if (!dbInstance) {
       throw new Error("Database not initialized");
     }
 
-    let result: string | null = null;
-
-    dbInstance.exec({
+    const rows = dbInstance.exec({
       sql: "SELECT updated_at FROM meta LIMIT 1",
-      rowMode: "stmt",
-      callback: (row) => {
-        result = row.getString(0);
-      },
+      returnValue: "resultRows",
     });
 
-    return result;
+    const result = rows[0][0]?.toString();
+    if (!result) {
+      throw new Error("No result");
+    }
+
+    return new Date(result);
   } catch (error) {
     console.error("Failed to get last updated date:", error);
     return null;
