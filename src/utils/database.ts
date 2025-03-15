@@ -63,6 +63,13 @@ export async function initDatabase() {
   }
 }
 
+function sanitizeWildcard(query: string): string {
+  // % => \%
+  // _ => \_
+  // \ => \\
+  return query.replace(/[_%\\]/g, "\\$&");
+}
+
 export async function searchSongs(
   title: string = "",
   artist: string = "",
@@ -90,8 +97,8 @@ export async function searchSongs(
 
     query += " WHERE 1=1";
     if (title) {
-      query += " AND (title LIKE ?";
-      params.push(`%${title}%`);
+      query += " AND (title LIKE ? ESCAPE '\\'";
+      params.push(`%${sanitizeWildcard(title)}%`);
       if (isOnly(title, HIRAGANA_CHARS + KATAKANA_CHARS + KANA_COMMON_CHARS)) {
         const kanaTitle = toKatakana(title);
         query += " OR title_ruby like ?";
@@ -100,8 +107,8 @@ export async function searchSongs(
       query += ")";
     }
     if (artist) {
-      query += " AND (artist LIKE ?";
-      params.push(`%${artist}%`);
+      query += " AND (artist LIKE ? ESCAPE '\\'";
+      params.push(`%${sanitizeWildcard(artist)}%`);
       if (isOnly(artist, HIRAGANA_CHARS + KATAKANA_CHARS + KANA_COMMON_CHARS)) {
         const kanaArtist = toKatakana(artist);
         query += " OR artist_ruby like ?";
