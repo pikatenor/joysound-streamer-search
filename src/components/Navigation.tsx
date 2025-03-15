@@ -1,4 +1,3 @@
-import { memo } from "react";
 import {
   Box,
   Container,
@@ -17,13 +16,13 @@ interface NavigationProps {
   disabled: boolean;
 }
 
-export const Navigation = memo(function Navigation({
+export const Navigation = ({
   titleQuery,
   artistQuery,
   onTitleChange,
   onArtistChange,
   disabled,
-}: NavigationProps) {
+}: NavigationProps) => {
   return (
     <Box
       as="nav"
@@ -63,4 +62,4 @@ export const Navigation = memo(function Navigation({
       </Container>
     </Box>
   );
-});
+};

@@ -1,4 +1,3 @@
-import { memo } from "react";
 import {
   HStack,
   Input,
@@ -13,13 +12,13 @@ interface SearchFormProps {
   disabled: boolean;
 }
 
-export const SearchForm = memo(function SearchForm({
+export const SearchForm = ({
   titleQuery,
   artistQuery,
   onTitleChange,
   onArtistChange,
   disabled,
-}: SearchFormProps) {
+}: SearchFormProps) => {
   return (
     <Flex flex="1" justify="center" maxW={{ base: "100%", md: "70%" }} mx="4">
       <HStack gap={2} width="100%">
@@ -40,4 +39,4 @@ export const SearchForm = memo(function SearchForm({
       </HStack>
     </Flex>
   );
-});
+};
