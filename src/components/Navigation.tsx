@@ -3,7 +3,9 @@ import {
   Container,
   Flex,
   Heading,
+  IconButton,
 } from "@chakra-ui/react";
+import { LuInfo } from "react-icons/lu";
 import { ColorModeToggle } from "./color-mode-toggle";
 import { InfoDialog } from "./InfoDialog";
 import { SearchForm } from "./SearchForm";
@@ -44,7 +46,11 @@ export const Navigation = ({
           </Heading>
 
           <Box>
-            <InfoDialog />
+            <InfoDialog>
+              <IconButton>
+                <LuInfo />
+              </IconButton>
+            </InfoDialog>
           </Box>
 
           <SearchForm

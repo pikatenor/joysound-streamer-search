@@ -1,4 +1,6 @@
+import { ReactNode } from "react";
 import {
+  Button,
   CloseButton,
   Dialog,
   HStack,
@@ -8,14 +10,19 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { LuExternalLink, LuInfo } from "react-icons/lu";
+import { LuExternalLink } from "react-icons/lu";
 import { BsGithub } from "react-icons/bs";
 import { useAppContext } from "../AppContext";
 import { useLastUpdatedDate } from "../hooks/useLastUpdatedDate";
 
 const GITHUB_URL = "https://github.com/pikatenor/joysound-streamer-search"
 
-export const InfoDialog = () => {
+interface InfoDialogProps {
+  children?: ReactNode;
+}
+
+export const InfoDialog = ({ children: trigger }: InfoDialogProps) => {
+
   const { initialized } = useAppContext();
   const { lastUpdated } = useLastUpdatedDate(initialized);
 
@@ -28,9 +35,11 @@ export const InfoDialog = () => {
   return (
     <Dialog.Root placement="center">
       <Dialog.Trigger asChild>
-        <IconButton>
-          <LuInfo />
-        </IconButton>
+        {trigger || (
+          <Button size="sm" variant="plain" color="fg.muted">
+            <Text fontSize="xs">このアプリについて</Text>
+          </Button>
+        )}
       </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
