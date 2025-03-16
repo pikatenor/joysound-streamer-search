@@ -20,11 +20,13 @@ export function SongCard({ song }: SongCardProps) {
       </Box>
       <Card.Body gap="2">
         <Stack gap="2" direction={{ base: "column", md: "row" }}>
-          <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`}>
+          <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`} target="_blank" rel="noopener noreferrer">
             <Text fontWeight="semibold" textStyle="sm">{song.title}</Text>
           </Link>
           <Separator hideBelow="md" orientation="vertical"></Separator>
-          <Text fontWeight="semibold" color="fg.muted" textStyle="sm">{song.artist}</Text>
+          <Link href={`https://www.joysound.com/web/search/artist/${song.artist_id}`} target="_blank" rel="noopener noreferrer">
+            <Text fontWeight="semibold" color="fg.muted" textStyle="sm">{song.artist}</Text>
+          </Link>
           <Separator hideBelow="md" flex="1" opacity="0" />
           <Text hideBelow="md" flexShrink="0" color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
         </Stack>
