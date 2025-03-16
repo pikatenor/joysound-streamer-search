@@ -90,6 +90,7 @@ export async function searchSongs(
       ,song_no
       ,group_id
       ,title
+      ,artist_id
       ,artist
       ,info
     FROM songs`;
@@ -146,8 +147,9 @@ export async function searchSongs(
             song_no: row.getInt(1) || 0,
             group_id: row.getInt(2) || 0,
             title: row.getString(3) || "",
-            artist: row.getString(4) || "",
-            aux_info: row.getString(5),
+            artist_id: row.getInt(4) || 0,
+            artist: row.getString(5) || "",
+            aux_info: row.getString(6),
           });
         }
         count++;
