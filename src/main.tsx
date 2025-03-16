@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ChakraProvider, createSystem, defaultConfig } from "@chakra-ui/react"
 import { ThemeProvider } from "next-themes"
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { Toaster } from "./components/ui/toaster"
 import { AppProvider } from './AppContext.tsx'
 import App from './App.tsx'
@@ -42,3 +44,8 @@ createRoot(document.getElementById('root')!).render(
     </ChakraProvider>
   </StrictMode>,
 )
+
+fetch('/__/firebase/init.json').then(async response => {
+  initializeApp(await response.json());
+  getAnalytics();
+});
