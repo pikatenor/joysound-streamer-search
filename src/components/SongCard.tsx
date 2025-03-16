@@ -20,7 +20,7 @@ export function SongCard({ song }: SongCardProps) {
       </Box>
       <Card.Body gap="2">
         <Stack gap="2" direction={{ base: "column", md: "row" }}>
-          <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`}>
+          <Link href={`https://www.joysound.com/web/search/song/${song.group_id}`} target="_blank" rel="noopener noreferrer">
             <Text fontWeight="semibold" textStyle="sm">{song.title}</Text>
           </Link>
           <Separator hideBelow="md" orientation="vertical"></Separator>
