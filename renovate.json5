@@ -1,0 +1,17 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:best-practices"],
+  labels: ["dependencies"],
+
+  minor: {
+    stabilityDays: 7,
+    automerge: true,
+  },
+  patch: {
+    stabilityDays: 3,
+    automerge: true,
+  },
+  pin: {
+    automerge: true,
+  },
+}
