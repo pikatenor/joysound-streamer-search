@@ -28,7 +28,7 @@
     "eslint": "9.25.1",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-react-refresh": "0.4.20",
-    "firebase-tools": "14.2.1",
+    "firebase-tools": "14.2.2",
     "globals": "16.0.0",
     "typescript": "5.8.3",
     "typescript-eslint": "8.31.1",
