@@ -14,7 +14,7 @@ interface SongCardProps {
 
 export function SongCard({ song }: SongCardProps) {
   return (
-    <Card.Root key={`${song.id}-${song.song_no}`} size="sm" width="100%">
+    <Card.Root as="li" key={`${song.id}-${song.song_no}`} size="sm" width="100%">
       <Box hideFrom="md" pos="absolute" bottom="0" right="0">
         <Text color="fg.subtle" textStyle="2xs">{`#${song.group_id}-${song.id} (${song.song_no})`}</Text>
       </Box>

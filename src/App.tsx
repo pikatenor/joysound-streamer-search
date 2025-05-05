@@ -40,7 +40,7 @@ function App() {
               </Alert.Root>
             )}
 
-            <Box flex="1" width="full" minHeight="300px">
+            <Box role="main" flex="1" width="full" minHeight="300px">
               <ResultsView
                 songs={songs}
                 loading={loading || !initialized}

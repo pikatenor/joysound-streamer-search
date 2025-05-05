@@ -36,7 +36,7 @@ export const InfoDialog = ({ children: trigger }: InfoDialogProps) => {
     <Dialog.Root placement="center">
       <Dialog.Trigger asChild>
         {trigger || (
-          <Button size="sm" variant="plain" color="fg.muted">
+          <Button size="sm" variant="plain" color="fg.muted" aria-label="open 'About this app'">
             <Text fontSize="xs">このアプリについて</Text>
           </Button>
         )}
