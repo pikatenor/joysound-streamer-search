@@ -20,9 +20,10 @@ export const SearchForm = ({
   disabled,
 }: SearchFormProps) => {
   return (
-    <Flex flex="1" justify="center" maxW={{ base: "100%", md: "70%" }} mx="4">
+    <Flex flex="1" justify="center" maxW={{ base: "100%", md: "70%" }} mx="4" role="search">
       <HStack gap={2} width="100%">
         <Input
+          role="searchbox"
           placeholder="曲名"
           value={titleQuery}
           onChange={(e) => onTitleChange(e.target.value)}
@@ -30,6 +31,7 @@ export const SearchForm = ({
           disabled={disabled}
         />
         <Input
+          role="searchbox"
           placeholder="アーティスト"
           value={artistQuery}
           onChange={(e) => onArtistChange(e.target.value)}

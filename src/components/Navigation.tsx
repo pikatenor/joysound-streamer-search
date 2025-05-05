@@ -47,7 +47,7 @@ export const Navigation = ({
 
           <Box>
             <InfoDialog>
-              <IconButton>
+              <IconButton aria-label="open 'About this app'">
                 <LuInfo />
               </IconButton>
             </InfoDialog>

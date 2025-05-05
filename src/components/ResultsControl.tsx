@@ -24,6 +24,7 @@ interface ResultsControlProps {
 export const ResultsControl = ({ totalCount, limit, onLimitChange }: ResultsControlProps) => {
   return (
     <Box
+      role="toolbar"
       position="fixed"
       bottom="0"
       right="0"
@@ -36,7 +37,7 @@ export const ResultsControl = ({ totalCount, limit, onLimitChange }: ResultsCont
     >
       <VStack gap="2" align="stretch">
         <HStack gap="2" fontSize="xs" color="fg.muted">
-          <Text><Em fontWeight="bold" fontStyle="normal">{totalCount}</Em> 件ヒット</Text>
+          <Text title="総件数"><Em fontWeight="bold" fontStyle="normal">{totalCount}</Em> 件ヒット</Text>
           <NativeSelect.Root
             size="xs"
             width="auto"

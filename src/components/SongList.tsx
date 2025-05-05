@@ -13,7 +13,7 @@ interface SongListProps {
 export const SongList = memo(({ songs }: SongListProps) => {
   return (
     <Box width="100%">
-      <VStack gap="4" align="stretch">
+      <VStack as="ul" gap="4" align="stretch">
         {songs.map((song) => (
           <SongCard key={`${song.id}-${song.song_no}`} song={song} />
         ))}
