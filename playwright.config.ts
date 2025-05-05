@@ -28,6 +28,11 @@ export default defineConfig({
     timezoneId: 'Asia/Tokyo',
   },
 
+  expect: {
+    /* 1% tolerance for visual regression */
+    toHaveScreenshot: { maxDiffPixelRatio: 0.01 },
+  },
+
   /* Configure projects for major browsers */
   projects: [
     {
