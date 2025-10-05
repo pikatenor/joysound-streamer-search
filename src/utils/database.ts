@@ -157,8 +157,6 @@ export async function searchSongs(
     });
 
     return { results: results, total: count };
-  } catch (error) {
-    throw error;
   } finally {
     console.log(`Search took ${performance.now() - start}ms`);
   }

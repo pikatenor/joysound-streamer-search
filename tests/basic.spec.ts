@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { DiAws } from 'react-icons/di';
 
 // Group tests related to initial page structure and appearance
 test.describe('Initial Page Load', () => {
