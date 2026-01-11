@@ -23,7 +23,6 @@ export async function initDatabase() {
 
     const db = new sqlite3Instance.oo1.DB({
       filename: ":memory:",
-      flags: "t",
     });
 
     // Use lower-level API to load the database
@@ -53,7 +52,7 @@ export async function initDatabase() {
     // Check if the database is loaded correctly
     db.exec("SELECT 1");
 
-    console.log("Database initialized successfully");
+    console.debug("Database initialized successfully");
 
     dbInstance = db;
     return db;
@@ -158,7 +157,7 @@ export async function searchSongs(
 
     return { results: results, total: count };
   } finally {
-    console.log(`Search took ${performance.now() - start}ms`);
+    console.debug(`Search took ${performance.now() - start}ms`);
   }
 }
 
