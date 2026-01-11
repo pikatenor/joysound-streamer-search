@@ -20,14 +20,16 @@ export const useBackToClear = ({
   const historyPushedRef = useRef(false);
 
   // Push history state when queries become non-empty
+  // Pop history state when queries are cleared programmatically
   useEffect(() => {
     if (hasQuery && !historyPushedRef.current) {
       // Push a new history entry so back button can be intercepted
       window.history.pushState({ searchActive: true }, "");
       historyPushedRef.current = true;
     } else if (!hasQuery && historyPushedRef.current) {
-      // Queries were cleared programmatically, reset the flag
+      // Queries were cleared programmatically, go back to remove the history entry
       historyPushedRef.current = false;
+      window.history.back();
     }
   }, [hasQuery]);
 
