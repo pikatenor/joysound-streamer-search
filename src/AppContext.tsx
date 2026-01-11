@@ -1,7 +1,8 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import { AppState } from "./types/app";
 import { useDatabaseInit } from "./hooks/useDatabaseInit";
 import { useSongSearch } from "./hooks/useSongSearch";
+import { useBackToClear } from "./hooks/useBackToClear";
 
 const DEFAULT_LIMIT = 50;
 
@@ -35,6 +36,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
 
   const { initialized, error: initError } = useDatabaseInit();
+
+  // Clear queries when back button is pressed on mobile
+  const clearQueries = useCallback(() => {
+    setTitleQuery("");
+    setArtistQuery("");
+  }, []);
+
+  useBackToClear({
+    titleQuery,
+    artistQuery,
+    onClear: clearQueries,
+  });
 
   const {
     results: songs,
