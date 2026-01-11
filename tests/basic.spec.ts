@@ -117,4 +117,33 @@ test.describe('Search Interaction', () => {
     // Confirm that a specific song matching the new input is visible
     await expect(songCards.locator('text=ああ情熱のバンバラヤー')).toBeVisible();
   });
+
+  test('clicking artist search icon fills artist query and clears title query', async ({ page }) => {
+    const titleInput = page.locator('input[placeholder="曲名"]');
+    const artistInput = page.locator('input[placeholder="アーティスト"]');
+
+    // First search for a song by title to get some results
+    await titleInput.fill('夢の中へ');
+
+    // Verify the search result appears
+    const firstSongCard = page.getByRole('listitem').first();
+    await expect(firstSongCard).toBeVisible();
+    await expect(firstSongCard.locator('text=井上陽水')).toBeVisible();
+
+    // Click the search icon next to the artist name
+    const artistSearchButton = firstSongCard.getByRole('button', { name: /井上陽水で検索/ });
+    await expect(artistSearchButton).toBeVisible();
+    await artistSearchButton.click();
+
+    // Verify the artist query is now filled with the artist name
+    await expect(artistInput).toHaveValue('井上陽水');
+
+    // Verify the title query has been cleared
+    await expect(titleInput).toHaveValue('');
+
+    // Verify the search results now show songs by this artist
+    const songCards = page.getByRole('listitem');
+    await expect(songCards.first()).toBeVisible();
+    await expect(songCards.first().locator('text=井上陽水')).toBeVisible();
+  });
 });
