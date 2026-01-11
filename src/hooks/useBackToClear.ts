@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
 interface UseBackToClearOptions {
   titleQuery: string;
@@ -18,6 +18,12 @@ export const useBackToClear = ({
 }: UseBackToClearOptions) => {
   const hasQuery = titleQuery !== "" || artistQuery !== "";
   const historyPushedRef = useRef(false);
+  const hasQueryRef = useRef(hasQuery);
+  const onClearRef = useRef(onClear);
+
+  // Keep refs in sync with latest values
+  hasQueryRef.current = hasQuery;
+  onClearRef.current = onClear;
 
   // Push history state when queries become non-empty
   // Pop history state when queries are cleared programmatically
@@ -33,24 +39,21 @@ export const useBackToClear = ({
     }
   }, [hasQuery]);
 
-  // Handle popstate (back button)
-  const handlePopState = useCallback(
-    (event: PopStateEvent) => {
-      if (hasQuery) {
+  // Handle popstate (back button) - registered once on mount
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (hasQueryRef.current) {
         // Prevent default navigation and clear queries instead
         event.preventDefault();
-        onClear();
+        onClearRef.current();
         historyPushedRef.current = false;
       }
       // If no query, let the browser handle normal navigation
-    },
-    [hasQuery, onClear]
-  );
+    };
 
-  useEffect(() => {
     window.addEventListener("popstate", handlePopState);
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
-  }, [handlePopState]);
+  }, []);
 };
