@@ -20,5 +20,5 @@ INSERT INTO songs VALUES(250281,3715,3715,'夢の中へ','ユメノナカヘ',48
 CREATE TABLE IF NOT EXISTS "meta" (
     "updated_at" datetime
   );
-INSERT INTO meta VALUES('2026-02-03 17:54:21');
+INSERT INTO meta VALUES('2026-02-21 17:31:12');
 COMMIT;
